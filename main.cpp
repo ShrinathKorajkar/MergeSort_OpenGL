@@ -234,11 +234,13 @@ static void keyBoard(unsigned char key, int x, int y)
     switch (key)
     {
         case 27 :
-        case 'q' || 'Q':
+        case 'q' :
+        case 'Q' :
             exit(0);
             break;
 
-        case 'n':
+        case 'n' :
+        case 'N' :
             windCount++;
             glutHideWindow();
 
@@ -265,6 +267,43 @@ static void keyBoard(unsigned char key, int x, int y)
 static void mouse(int button, int state, int x, int y)
 {
     cout<<x<<" "<<500 - y<<endl;
+}
+
+static void helpMenu(int response)
+{
+    switch(response)
+    {
+        case 1:
+                exit(0);
+                break;
+
+        case 2:
+                keyBoard('n', 1, 1);
+                break;
+
+        case 3:
+                windCount++;
+                keyBoard('n', 1, 1);
+                break;
+
+        case 4:
+                mergeSimulation();
+                break;
+
+        case 5:
+                break;
+    }
+}
+
+static void createMenu()
+{
+    glutCreateMenu(helpMenu);
+    glutAddMenuEntry("QUIT",1);
+    glutAddMenuEntry("HOME",2);
+    glutAddMenuEntry("RULES",3);
+    glutAddMenuEntry("START SIMULATION",4);
+    glutAddMenuEntry("STOP SIMULATION",5);
+    glutAttachMenu(GLUT_RIGHT_BUTTON);
 }
 
 static void beforeWindowCreation()
@@ -294,6 +333,7 @@ int main(int argc, char *argv[])
     laterWindowCreation();
     glutDisplayFunc(mergeSimulation);
     glutHideWindow();
+    createMenu();
 
     glutSetWindow(windID[1]);
     laterWindowCreation();
