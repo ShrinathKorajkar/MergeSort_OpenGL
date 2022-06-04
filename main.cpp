@@ -9,7 +9,7 @@ using namespace std;
 
 int windWidth = 1000, windHeight = 500;
 int windID[3];
-int windCount = 0, stepCount = 0;
+int windCount = 0, stepCount = 0, counter = 0;
 
 char mergeSort[3][8] ={
                         '2', '1', '8', '6', '4', '3', '5', '7',
@@ -45,22 +45,40 @@ static void idle(void)
     glutPostRedisplay();
 }
 
-static void drawArrow()
+static void drawLeftArrow(int arrowStartx, int arrowStarty, int arrowEndx, int arrowEndy, int tilt)
 {
     glPushMatrix();
     glLineWidth(3.0);
     glColor3f(0.0, 0.0, 1.0);
     glBegin(GL_LINES);
-        glVertex2i(500, 450);
-        glVertex2i(500, 405);
+        glVertex2i(arrowStartx, arrowStarty);
+        glVertex2i(arrowEndx, arrowEndy);
     glEnd();
     glBegin(GL_TRIANGLES);
-        glVertex2i(500, 400);
-        glVertex2i(490, 410);
-        glVertex2i(510, 410);
+        glVertex2i(arrowEndx, arrowEndy);
+        glVertex2i(arrowEndx + 5 - tilt, arrowEndy + 15 + tilt/4);
+        glVertex2i(arrowEndx + 15 - tilt/4, arrowEndy - 5 + tilt);
     glEnd();
     glPopMatrix();
-    glFlush();
+
+}
+
+static void drawRightArrow(int arrowStartx, int arrowStarty, int arrowEndx, int arrowEndy, int tilt)
+{
+     glPushMatrix();
+    glLineWidth(3.0);
+    glColor3f(0.0, 0.0, 1.0);
+    glBegin(GL_LINES);
+        glVertex2i(arrowStartx, arrowStarty);
+        glVertex2i(arrowEndx, arrowEndy);
+    glEnd();
+    glBegin(GL_TRIANGLES);
+        glVertex2i(arrowEndx, arrowEndy);
+        glVertex2i(arrowEndx - 5 + tilt, arrowEndy + 15 - tilt/4);
+        glVertex2i(arrowEndx - 15 - tilt/4, arrowEndy - 5 + tilt);
+    glEnd();
+    glPopMatrix();
+
 }
 
 static void printText(int x, int y, float r, float g, float b, void *font, char *str)
@@ -135,6 +153,12 @@ static void layer1(int btm)
     glTranslatef(0, btm, 0);
     displayArray(1, 8);
     glPopMatrix();
+
+    if(!stepCount == 0)
+    {
+        drawRightArrow(265, 113, 370, 75, 0);
+        drawLeftArrow(740, 113, 632, 75, 0);
+    }
 }
 
 static void layer2(int btm)
@@ -147,6 +171,22 @@ static void layer2(int btm)
     glTranslatef(300, btm, 0);
     displayArray(5, 8);
     glPopMatrix();
+
+    if(stepCount == 0)
+    {
+        drawLeftArrow(437, 448, 330, 400, 0);
+        drawRightArrow(565, 448, 670, 400, 0);
+    }
+    else
+    {
+        drawRightArrow(120, 188, 198, 130, 2);
+        drawLeftArrow(405, 188, 330, 130, 2);
+        glPushMatrix();
+        glTranslatef(475, 0, 0);
+        drawRightArrow(120, 188, 198, 130, 2);
+        drawLeftArrow(405, 188, 330, 130, 2);
+        glPopMatrix();
+    }
 }
 
 static void layer3(int btm)
@@ -167,6 +207,36 @@ static void layer3(int btm)
     glTranslatef(475, btm, 0);
     displayArray(7, 8);
     glPopMatrix();
+
+    if(stepCount == 0)
+    {
+        drawLeftArrow(230, 383, 155, 335, 2);
+        drawRightArrow(295, 383, 368, 335, 2);
+        glPushMatrix();
+        glTranslatef(475, 0, 0);
+        drawLeftArrow(230, 383, 155, 335, 2);
+        drawRightArrow(295, 383, 368, 335, 2);
+        glPopMatrix();
+    }else
+    {
+        drawRightArrow(40, 253, 87, 205, 5);
+        drawLeftArrow(205, 253, 155, 205, 5);
+        glPushMatrix();
+        glTranslatef(285, 0, 0);
+        drawRightArrow(40, 253, 87, 205, 5);
+        drawLeftArrow(205, 253, 155, 205, 5);
+        glPopMatrix();
+        glPushMatrix();
+        glTranslatef(475, 0, 0);
+        drawRightArrow(40, 253, 87, 205, 5);
+        drawLeftArrow(205, 253, 155, 205, 5);
+        glPopMatrix();
+        glPushMatrix();
+        glTranslatef(760, 0, 0);
+        drawRightArrow(40, 253, 87, 205, 5);
+        drawLeftArrow(205, 253, 155, 205, 5);
+        glPopMatrix();
+    }
 }
 
 static void layer4(int btm)
@@ -203,30 +273,73 @@ static void layer4(int btm)
     glTranslatef(575, btm, 0);
     displayArray(8, 8);
     glPopMatrix();
+
+    drawLeftArrow(105, 315, 60, 270, 5);
+    drawRightArrow(135, 315, 185, 270, 5);
+    glPushMatrix();
+    glTranslatef(280, 0, 0);
+    drawLeftArrow(105, 315, 60, 270, 5);
+    drawRightArrow(135, 315, 185, 270, 5);
+    glPopMatrix();
+    glPushMatrix();
+    glTranslatef(483, 0, 0);
+    drawLeftArrow(105, 315, 60, 270, 5);
+    drawRightArrow(135, 315, 185, 270, 5);
+    glPopMatrix();
+    glPushMatrix();
+    glTranslatef(760, 0, 0);
+    drawLeftArrow(105, 315, 60, 270, 5);
+    drawRightArrow(135, 315, 185, 270, 5);
+    glPopMatrix();
 }
 static void layerDisplay()
 {
     stepCount = 0;
     layer1(0);
-    layer2(-65);
-    layer3(-130);
-    layer4(-195);
-    stepCount++;
-    layer3(-260);
-    layer2(-335);
-    stepCount++;
-    layer1(-390);
-    printText(400, 20, 1.0, 0.0, 0.0, GLUT_BITMAP_9_BY_15, "TIME COMPLEXITY : O(n)");
-    drawArrow();
+    if(counter > 1)
+        layer2(-65);
+    if(counter > 2)
+        layer3(-130);
+    if(counter > 3)
+        layer4(-195);
+    if(counter > 4)
+    {
+        stepCount++;
+        layer3(-260);
+    }
+    if(counter > 5)
+        layer2(-335);
+    if(counter > 6)
+    {
+        stepCount++;
+        layer1(-390);
+        printText(400, 20, 1.0, 0.0, 0.0, GLUT_BITMAP_9_BY_15, "TIME COMPLEXITY : O(nlogn)");
+    }
+}
+
+static void timeHandler(int value)
+{
+    counter++;
+}
+static void callTimer()
+{
+    for(int i = 1; i <= 7; i++)
+    {
+        glutTimerFunc(3000 * i, timeHandler, counter);
+    }
 }
 
 static void mergeSimulation()
 {
     glClear(GL_COLOR_BUFFER_BIT);
-
     layerDisplay();
-
     glFlush();
+    if(counter == 0)
+    {
+        counter++;
+        callTimer();
+    }
+
 }
 
 static void keyBoard(unsigned char key, int x, int y)
@@ -266,7 +379,10 @@ static void keyBoard(unsigned char key, int x, int y)
 
 static void mouse(int button, int state, int x, int y)
 {
-    cout<<x<<" "<<500 - y<<endl;
+    if(button == GLUT_LEFT_BUTTON && state == GLUT_DOWN)
+    {
+        cout<<x<<" "<<500 - y<<endl;
+    }
 }
 
 static void helpMenu(int response)
@@ -312,7 +428,7 @@ static void beforeWindowCreation()
     glutInitWindowPosition(120,60);
     glutInitDisplayMode(GLUT_RGB | GLUT_SINGLE);
 }
-/* Program entry point */
+
 static void laterWindowCreation()
 {
     myInit();
@@ -322,6 +438,7 @@ static void laterWindowCreation()
     glutIdleFunc(idle);
 }
 
+/* Program entry point */
 int main(int argc, char *argv[])
 {
     glutInit(&argc, argv);
