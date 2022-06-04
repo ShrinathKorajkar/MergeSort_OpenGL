@@ -464,7 +464,7 @@ int main(int argc, char *argv[])
     glutShowWindow();
 
     // delete this after over
-   // glutSetWindow(windID[2]);
+    //glutSetWindow(windID[2]);
     //glutShowWindow();
 
     glutMainLoop();
