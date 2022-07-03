@@ -9,14 +9,123 @@ using namespace std;
 
 int windWidth = 1000, windHeight = 500;
 int windID[4];
-int windCount = 0, stepCount = 0, counter = 0;
+int windCount = 0, stepCount = 0, counter = 0, mergeCount = 0;
 bool startSimulation = false;
+int inputArr[8];
 
-char mergeSort[3][8] ={
+char mergeSort[4][8] ={
                         '2', '1', '8', '6', '4', '3', '5', '7',
+                        '1', '2', '6', '8', '3', '4', '5', '7',
                         '1', '2', '6', '8', '3', '4', '5', '7',
                         '1', '2', '3', '4', '5', '6', '7', '8'
                     };
+
+static void createDispArray()
+{
+    mergeCount++;
+    if(mergeCount == 2)
+    {
+        for(int i = 0; i < 4; i++)
+        {
+            mergeSort[1][i] = (char)(inputArr[i] + '0');
+        }
+    }
+    else if(mergeCount == 5)
+    {
+        for(int i = 4; i < 8; i++)
+        {
+            mergeSort[1][i] = (char)(inputArr[i] + '0');
+        }
+    }
+    else if(mergeCount == 6)
+    {
+        for(int i = 0; i < 8; i++)
+        {
+            mergeSort[2][i] = (char)(inputArr[i] + '0');
+        }
+    }
+    else if(mergeCount == 7)
+    {
+        for(int i = 0; i < 8; i++)
+        {
+            mergeSort[3][i] = (char)(inputArr[i] + '0');
+        }
+    }
+}
+
+static void merge(int arr[], int l, int m, int r)
+{
+    int i, j, k;
+    int n1 = m - l + 1;
+    int n2 = r - m;
+
+    /* create temp arrays */
+    int L[n1], R[n2];
+
+    /* Copy data to temp arrays L[] and R[] */
+    for (i = 0; i < n1; i++)
+        L[i] = arr[l + i];
+    for (j = 0; j < n2; j++)
+        R[j] = arr[m + 1 + j];
+
+    /* Merge the temp arrays back into arr[l..r]*/
+    i = 0; // Initial index of first subarray
+    j = 0; // Initial index of second subarray
+    k = l; // Initial index of merged subarray
+    while (i < n1 && j < n2) {
+        if (L[i] <= R[j]) {
+            arr[k] = L[i];
+            i++;
+        }
+        else {
+            arr[k] = R[j];
+            j++;
+        }
+        k++;
+    }
+
+    /* Copy the remaining elements of L[], if there
+    are any */
+    while (i < n1) {
+        arr[k] = L[i];
+        i++;
+        k++;
+    }
+
+    /* Copy the remaining elements of R[], if there
+    are any */
+    while (j < n2) {
+        arr[k] = R[j];
+        j++;
+        k++;
+    }
+}
+
+static void mergeSortAlgo(int arr[], int l, int r)
+{
+    if (l < r) {
+        int m = l + (r - l) / 2;
+
+        // Sort first and second halves
+        mergeSortAlgo(arr, l, m);
+        mergeSortAlgo(arr, m + 1, r);
+
+        merge(arr, l, m, r);
+
+        createDispArray();
+    }
+}
+
+static void takeInput()
+{
+    cout<<"\nEnter 8 Integer Numbers To Sort\n "<<endl;
+    for(int i = 0; i < 8; i++)
+    {
+        cin>>inputArr[i];
+        mergeSort[0][i] = (char)(inputArr[i] + '0');
+    }
+    mergeSortAlgo(inputArr, 0, 7);
+}
 
 static void myInit()
 {
@@ -281,7 +390,10 @@ static void layerDisplay()
         layer3(-260);
     }
     if(counter > 5)
+    {
+        stepCount++;
         layer2(-335);
+    }
 
     if(counter > 6)
     {
@@ -456,6 +568,7 @@ static void laterWindowCreation()
 /* Program entry point */
 int main(int argc, char *argv[])
 {
+    takeInput();
     glutInit(&argc, argv);
     beforeWindowCreation();
 
