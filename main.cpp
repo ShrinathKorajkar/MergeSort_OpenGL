@@ -223,7 +223,57 @@ static void displayArray(int startDigit, int endDigit)
     {
         glColor3f(1.0, 1.0, 1.0);
         glRasterPos2f(startx + next + 8, starty - 20);
-        glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, mergeSort[stepCount][i - 1]);
+        int num = (int)mergeSort[stepCount][i - 1];
+        int newnum = 0;
+        if(num < 48)
+        {
+            glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, '-');
+            newnum = 48 + (48 - num);
+            if(newnum < 58)
+            {
+                glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, newnum);
+            }
+            else
+            {
+                int mynum = newnum - 48;
+                int rev = 1, len = 0, rem;
+                while(mynum != 0)
+                {
+                    len++;
+                    rem = mynum % 10;
+                    rev = rev * 10 + rem;
+                    mynum /= 10;
+                }
+                for(int i = 0; i < len; i++)
+                {
+                    newnum = 48 + rev % 10;
+                    glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, newnum);
+                    rev /= 10;
+                }
+            }
+        }
+        if(num > 57)
+        {
+            int mynum = num - 48;
+            int rev = 1, len = 0, rem;
+            while(mynum != 0)
+            {
+                len++;
+                rem = mynum % 10;
+                rev = rev * 10 + rem;
+                mynum /= 10;
+            }
+            for(int i = 0; i < len; i++)
+            {
+                newnum = 48 + rev % 10;
+                glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, newnum);
+                rev /= 10;
+            }
+        }
+        if(num > 47 && num < 58)
+        {
+            glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, mergeSort[stepCount][i - 1]);
+        }
         next += 32;
     }
 }
