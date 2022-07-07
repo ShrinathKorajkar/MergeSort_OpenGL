@@ -298,7 +298,7 @@ static void drawLeftArrow(int arrowStartx, int arrowStarty, int arrowEndx, int a
 
 static void drawRightArrow(int arrowStartx, int arrowStarty, int arrowEndx, int arrowEndy, int tilt)
 {
-     glPushMatrix();
+    glPushMatrix();
     glLineWidth(3.0);
     glColor3f(0.0, 0.0, 0.0);
     glBegin(GL_LINES);
